@@ -27,7 +27,14 @@ class MealDetailsScreen extends ConsumerWidget {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(wasAdded ? 'Meal added as a favourite' : 'Meal removed')));
               },
-              icon: Icon(exists ? Icons.star : Icons.star_border))
+              icon: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                child: Icon(exists ? Icons.star : Icons.star_border,key: ValueKey(exists),),
+                transitionBuilder: (child,animation) {
+                  return RotationTransition(turns: Tween(end: 1.0,begin: 0.5).animate(animation),child: child,);
+                },
+              ),
+              )
         ],
       ),
       body: SingleChildScrollView(
@@ -35,11 +42,14 @@ class MealDetailsScreen extends ConsumerWidget {
           children: [
             Column(
               children: [
-                Image.network(
-                  meal.imageUrl,
-                  height: 300,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+                Hero(
+                  tag: meal.id,
+                  child: Image.network(
+                    meal.imageUrl,
+                    height: 300,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 const SizedBox(
                   height: 14,
